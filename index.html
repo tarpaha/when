@@ -8,13 +8,13 @@
     </head>
     <body>
         <div class="container">
-            <div class="card shadow p-3 mb-5 bg-white rounded">
+            <div class="card shadow p-3 mb-5 rounded">
                 <div class="row p-2 align-items-center">
                     <div class="col-auto">
                         <h5>Request</h5>
                     </div>
                     <div class="col">
-                        <input type="text" class="form-control" id="input" placeholder="Write request and press Enter" onkeypress="if(event.key == 'Enter') processRequest()">
+                        <input type="text" class="form-control" id="input" placeholder="Write request and press Enter" onkeypress="onKeyPress(event.key)">
                     </div>
                 </div>
                 <div class="row p-2 align-items-center">
@@ -22,14 +22,12 @@
                         <h5>Answer</h5>
                     </div>
                     <div class="col">
-                        <span id="result" class="content bg-info">
-                            Request result will be here
-                        </span>
+                        <span id="result" class="content"></span>
                     </div>
                 </div>
                 <div class="row p-2">
                     <div class="col">
-                        <pre class="bg-success"><code id="json">JSON will be here</code></pre>
+                        <pre><code id="json"></code></pre>
                     </div>
                 </div>
             </div>
@@ -40,31 +38,62 @@
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" crossorigin="anonymous"></script>
 
         <script>
-            function processRequest() {
-                request($("#input").val(), processResponse);
+            function onKeyPress(key) {
+                if(key == 'Enter')
+                    processRequest();
+                else
+                    clearResult();
             }
 
-            function processResponse(dateTime, json) {
+            function clearResult() {
+                showResult("", "");
+            }
+
+            function showError(error) {
+                showResult(error, "");
+            }
+
+            function showResult(dateTime, json) {
                 $("#result").text(dateTime);
                 $("#json").text(json);
             }
 
-            function request(input, result) {
+            function processRequest() {
+                request(
+                    $("#input").val(),
+                    processResponse);
+            }
+
+            function request(input, processResponse) {
                 $.get("http://85.217.170.67/when/get", { input: input })
-                    .done(function(data) {
-                        const values = data.result.Ok;
-                        if(values.length > 0) {
-                            result(values[0], JSON.stringify(data, null, 4));
-                        } else {
-                            result("Cannot parse", "");
-                        }
+                    .done(function(response) {
+                        processResponse(response);
                     })
                     .fail(function(jqXHR, textStatus, errorThrown) {
                         console.log(jqXHR);
                         console.log(textStatus);
                         console.log(errorThrown);
-                        result("Request error", "");
+                        showError("Request error");
                     });
+            }
+
+            function processResponse(json) {
+                const values = json.result.Ok;
+                if(values.length > 0) {
+                    showResult(
+                        parseDateTime(values[0]),
+                        JSON.stringify(json, null, 4));
+                } else {
+                    showError("Cannot parse");
+                }
+            }
+
+            function parseDateTime(dateTime) {
+                if(dateTime.length <= 0)
+                    return "";
+                const date = dateTime.substring(0, 10);
+                const time = dateTime.substring(11, 19);
+                return date + " " + time;
             }
         </script>
 
