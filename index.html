@@ -7,14 +7,30 @@
         <title>When</title>
     </head>
     <body>
-        <div class="container">
-            <input type="text" class="form-control" id="input" placeholder="Write request and press Enter" onkeypress="if(event.key == 'Enter') processRequest()">
-            <p id="result">
-                Request result will be here
-            </p>
-            <pre><code id="json">
-                Json will be here
-            </code></pre>
+        <div class="container bg-secondary">
+            <div class="row p-2 align-items-center">
+                <div class="col-auto">
+                    <h5>Request</h5>
+                </div>
+                <div class="col">
+                    <input type="text" class="form-control" id="input" placeholder="Write request and press Enter" onkeypress="if(event.key == 'Enter') processRequest()">
+                </div>
+            </div>
+            <div class="row p-2 align-items-center">
+                <div class="col-auto">
+                    <h5>Answer</h5>
+                </div>
+                <div class="col">
+                    <span id="result" class="content bg-info">
+                        Request result will be here
+                    </span>
+                </div>
+            </div>
+            <div class="row p-2">
+                <div class="col">
+                    <pre class="bg-success"><code id="json">JSON will be here</code></pre>
+                </div>
+            </div>
         </div>
 
         <script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
