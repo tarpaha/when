@@ -7,28 +7,30 @@
         <title>When</title>
     </head>
     <body>
-        <div class="container bg-secondary">
-            <div class="row p-2 align-items-center">
-                <div class="col-auto">
-                    <h5>Request</h5>
+        <div class="container">
+            <div class="card shadow p-3 mb-5 bg-white rounded">
+                <div class="row p-2 align-items-center">
+                    <div class="col-auto">
+                        <h5>Request</h5>
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" id="input" placeholder="Write request and press Enter" onkeypress="if(event.key == 'Enter') processRequest()">
+                    </div>
                 </div>
-                <div class="col">
-                    <input type="text" class="form-control" id="input" placeholder="Write request and press Enter" onkeypress="if(event.key == 'Enter') processRequest()">
+                <div class="row p-2 align-items-center">
+                    <div class="col-auto">
+                        <h5>Answer</h5>
+                    </div>
+                    <div class="col">
+                        <span id="result" class="content bg-info">
+                            Request result will be here
+                        </span>
+                    </div>
                 </div>
-            </div>
-            <div class="row p-2 align-items-center">
-                <div class="col-auto">
-                    <h5>Answer</h5>
-                </div>
-                <div class="col">
-                    <span id="result" class="content bg-info">
-                        Request result will be here
-                    </span>
-                </div>
-            </div>
-            <div class="row p-2">
-                <div class="col">
-                    <pre class="bg-success"><code id="json">JSON will be here</code></pre>
+                <div class="row p-2">
+                    <div class="col">
+                        <pre class="bg-success"><code id="json">JSON will be here</code></pre>
+                    </div>
                 </div>
             </div>
         </div>
