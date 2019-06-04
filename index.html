@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" crossorigin="anonymous">
+        <title>When</title>
+    </head>
+    <body>
+        <div class="container">
+            <input type="text" class="form-control" id="input" placeholder="Write request and press Enter" onkeypress="if(event.key == 'Enter') processRequest()">
+            <p id="result">
+                Request result will be here
+            </p>
+            <pre><code id="json">
+                Json will be here
+            </code></pre>
+        </div>
+
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" crossorigin="anonymous"></script>
+
+        <script>
+            function processRequest() {
+                request($("#input").val(), processResponse);
+            }
+
+            function processResponse(dateTime, json) {
+                $("#result").text(dateTime);
+                $("#json").text(json);
+            }
+
+            function request(input, result) {
+                $.get("http://85.217.170.67/when/get", { input: input })
+                    .done(function(data) {
+                        const values = data.result.Ok;
+                        if(values.length > 0) {
+                            result(values[0], JSON.stringify(data, null, 4));
+                        } else {
+                            result("Cannot parse", "");
+                        }
+                    })
+                    .fail(function(jqXHR, textStatus, errorThrown) {
+                        result("Request error", "");
+                    });
+            }
+        </script>
+
+    </body>
+</html>
