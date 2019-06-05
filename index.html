@@ -46,16 +46,12 @@
             }
 
             function clearResult() {
-                showResult("", "");
-            }
-
-            function showError(error) {
-                showResult(error, "");
+                showResult("", null);
             }
 
             function showResult(dateTime, json) {
                 $("#result").text(dateTime);
-                $("#json").text(json);
+                $("#json").text(json != null ? JSON.stringify(json, null, 4) : "");
             }
 
             function processRequest() {
@@ -73,18 +69,25 @@
                         console.log(jqXHR);
                         console.log(textStatus);
                         console.log(errorThrown);
-                        showError("Request error");
+                        showResult("Request error", null);
                     });
             }
 
             function processResponse(json) {
+                if(!json.hasOwnProperty("result")) {
+                    return showResult("Wrong response from server, no result", json);
+                }
+                if(json.result.hasOwnProperty("Err")) {
+                    return showResult("Parser error, invalid input data", json);
+                }
+                if(!json.result.hasOwnProperty("Ok")) {
+                    return showResult("Wrong response from server, neither Ok or Err in result", json);
+                }
                 const values = json.result.Ok;
                 if(values.length > 0) {
-                    showResult(
-                        parseDateTime(values[0]),
-                        JSON.stringify(json, null, 4));
+                    showResult(parseDateTime(values[0]), json);
                 } else {
-                    showError("Cannot parse");
+                    showResult("Cannot parse", json);
                 }
             }
 
